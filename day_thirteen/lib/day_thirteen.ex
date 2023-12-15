@@ -86,16 +86,16 @@ defmodule DayThirteen do
   defp find_mirrors_2([{horizontal, vertical} | t], mirrors) do
     horiz_mirror = horizontal
       |> find_position_2()
-      |> List.first()
+      |> verify_valid(horizontal)# |> IO.inspect()
     ver_mirror = vertical
       |> find_position_2()
-      |> List.first()
+      |> verify_valid(vertical)
 
     cond do
-    horiz_mirror != nil && true_mirror?(1, String.length(horizontal[1]), elem(horiz_mirror, 0), elem(horiz_mirror, 1), horizontal) ->
+    horiz_mirror != nil && true_mirror?(1, Map.keys(horizontal) |> Enum.max(), elem(horiz_mirror, 0) - 1, elem(horiz_mirror, 1) + 1, horizontal) ->
       mirror = {100, horiz_mirror}
       find_mirrors_2(t, [mirror | mirrors])
-    ver_mirror != nil && true_mirror?(1, String.length(vertical[1]), elem(ver_mirror, 0), elem(ver_mirror, 1), vertical) ->
+    ver_mirror != nil && true_mirror?(1, Map.keys(vertical) |> Enum.max(), elem(ver_mirror, 0) - 1, elem(ver_mirror, 1) + 1, vertical) ->
       mirror = {1, ver_mirror}
       find_mirrors_2(t, [mirror | mirrors])
     true ->
@@ -141,8 +141,27 @@ defmodule DayThirteen do
   defp find_position_3(map) do
     {min, max} = map |> Map.keys() |> Enum.min_max()
     for i <- 1..Enum.count(map) - 1,
-      true_mirror_2?(min, max, i, i + 1, false, map) == true do
+      true_mirror_2?(min, max, i , i + 1, false, map) == true do
         {i, i + 1}
     end
+  end
+
+  defp verify_valid([], _map), do: nil
+  defp verify_valid(list, map) do
+    for {min, max} = item <- list,
+      true_mirror?(1, Map.keys(map) |> Enum.max(), min - 1, max + 1, map) do
+      item
+    end
+    |> pick_best(Map.keys(map) |> Enum.max())
+  end
+
+  defp pick_best([], _max), do: nil
+  defp pick_best([{_x, _y} = item], _max), do: item
+  defp pick_best(list, max) do
+    list
+    |> Enum.map(fn {i, j} = item -> {min(i - 1, max - j), item} end) |> IO.inspect()
+    |> Enum.sort(:desc)
+    |> List.first()
+    |> elem(1)
   end
 end
