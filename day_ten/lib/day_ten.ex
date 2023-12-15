@@ -8,7 +8,7 @@ defmodule DayTen do
 
   ## Examples
 
-      iex> DayTen.part_one("C:/Users/donjuan/Downloads/input.txt)
+      iex> DayTen.part_one("C:/Users/donjuan/Downloads/input.txt")
       527856
 
   """
@@ -24,7 +24,7 @@ defmodule DayTen do
   end
 
   def part_two(path) do
-  path
+    path
     |> File.read!()
     |> prepare_for_task()
     |> find_non_loop_tile_groups()
