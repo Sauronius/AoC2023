@@ -6,6 +6,8 @@ defmodule DayTwelve do
   @doc """
   Day twelve of Advent of Code 2023.
 
+  1579489840074
+
   ## Examples
 
       iex> DayTwelve.part_one("C:/Users/donjuan/Downloads/input.txt)
@@ -42,6 +44,8 @@ defmodule DayTwelve do
     |> count_valid_posibilities()
 
     prep4 = Enum.zip_reduce(prep2, prep3, [], fn elem1, elem2, acc -> [max(elem1, elem2) | acc] end) |> Enum.reverse()
+
+    #|> Enum.sum()
 
     Enum.zip_reduce(prep1, prep4, 0, fn elem1, elem2, acc -> acc + elem1 * elem2 ** 4 end)
   end
@@ -109,9 +113,10 @@ defmodule DayTwelve do
 
   def test() do
     list = [["....", "...#", "..#.", "..##", ".#..", ".#.#", ".##.", ".###", "#...", "#..#", "#.#.", "#.##", "##..", "##.#", "###.", "####"], ".######..#####."]
+    string = "?###??????????###??????????###??????????###??????????###????????"
 
-    regex = ~r/^\.*\#{1}\.+\#{6}\.+\#{5}\.*/
+    regex = ~r/[\.\?]*[\#\?]{3}[\.\?]+[\#\?]{2}[\.\?]+[\#\?]{1}[\.\?]{1}/
 
-    count_valid_in_single_line(list, regex, [])
+    Regex.scan(regex, string) |> Enum.count()
   end
 end
